@@ -23,88 +23,62 @@ export function Calculators({ isOpen, onClose }) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
+        <motion.div 
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          className="mov open" onClick={(e) => { if (e.target.classList.contains('mov')) onClose() }}
+        >
           <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
-          />
-          <motion.div 
-            initial={{ y: '100%', boxShadow: 'none' }}
-            animate={{ y: 0, boxShadow: '0 -20px 80px rgba(0,0,0,0.5)' }}
-            exit={{ y: '100%', boxShadow: 'none' }}
+            initial={{ y: '100%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: '100%', opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 w-full h-[85vh] bg-card/95 backdrop-blur-2xl border-t border-b1 z-50 rounded-t-3xl flex flex-col overflow-hidden"
+            className="msh" onClick={e => e.stopPropagation()}
           >
-            {/* HEADER */}
-            <div className="flex items-center justify-between p-4 px-6 border-b border-b1 shrink-0 bg-background/50">
-              <div className="font-extrabold text-[18px] tracking-tight text-primary flex items-center gap-2">
-                <span className="ms text-blue">calculate</span>
-                Clinical Calculators
-              </div>
-              <button onClick={onClose} className="w-10 h-10 rounded-xl bg-transparent text-t2 flex items-center justify-center hover:bg-b1/30 hover:text-primary transition-all">
-                <span className="ms sm">close</span>
-              </button>
+            <div className="mhdr">
+              <div className="mtitle"><span className="ms md">calculate</span> Clinical Calculators</div>
+              <button className="mclose" onClick={onClose}><span className="ms sm">close</span></button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 bg-background">
-              <div className="max-w-xl mx-auto flex flex-col gap-3">
+            <div className="mbody">
+              <div className="tp active">
                 {CALCULATORS.map(c => {
                   const isActive = activeId === c.id
                   return (
-                    <div key={c.id} className="bg-card border border-b1 rounded-2xl overflow-hidden transition-all shadow-sm">
-                      <button 
-                        onClick={() => setActiveId(isActive ? null : c.id)}
-                        className={`w-full flex items-center justify-between p-4 transition-colors ${isActive ? 'bg-blue/5' : 'hover:bg-card2'}`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 ${isActive ? 'bg-blue text-white shadow-md' : 'bg-card2 text-t2 border border-b2'}`}>
-                            <span className="ms">{c.icon}</span>
-                          </div>
-                          <div className="text-left">
-                            <div className={`font-bold text-[15px] ${isActive ? 'text-blue' : 'text-primary'}`}>{c.name}</div>
-                            <div className="text-[12px] text-muted">{c.desc}</div>
+                    <div key={c.id} className={`ccard ${isActive ? 'open' : ''}`}>
+                      <div className="chdr" onClick={() => setActiveId(isActive ? null : c.id)}>
+                        <div className="chdr-l"><span className="ms sm">{c.icon}</span> {c.name}</div>
+                        <span className="ms sm chev">expand_more</span>
+                      </div>
+                      <div className="cbody">
+                        <div className="cbwrap">
+                          <div className="cinn">
+                            {/* Instead of the custom inner React components which use generic Tailwind,
+                                we keep them as is for now, but wrap them so they appear neatly */}
+                            {isActive && (
+                              <div className="mt-2">
+                                {activeId === 'ckd' && <CKDEPIForm />}
+                                {activeId === 'crcl' && <CrClForm />}
+                                {activeId === 'meld' && <MELDForm />}
+                                {activeId === 'cp' && <ChildPughForm />}
+                                {activeId === 'ped' && <PediatricForm />}
+                                {activeId === 'bsa' && <BSAForm />}
+                                {activeId === 'ibw' && <IBWForm />}
+                                {activeId === 'ca' && <CalciumForm />}
+                                {activeId === 'op' && <OpioidForm />}
+                                {activeId === 'vanc' && <VancoForm />}
+                                {activeId === 'pheny' && <PhenytoinForm />}
+                                {activeId === 'curb' && <CURBForm />}
+                                {activeId === 'wells' && <WellsForm />}
+                              </div>
+                            )}
                           </div>
                         </div>
-                        <span className={`ms text-t2 transition-transform duration-300 ${isActive ? 'rotate-180' : ''}`}>expand_more</span>
-                      </button>
-                      
-                      <AnimatePresence initial={false}>
-                        {isActive && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            className="overflow-hidden border-t border-b1/50"
-                          >
-                            <div className="p-5 bg-card2/30">
-                              {activeId === 'ckd' && <CKDEPIForm />}
-                              {activeId === 'crcl' && <CrClForm />}
-                              {activeId === 'meld' && <MELDForm />}
-                              {activeId === 'cp' && <ChildPughForm />}
-                              {activeId === 'ped' && <PediatricForm />}
-                              {activeId === 'bsa' && <BSAForm />}
-                              {activeId === 'ibw' && <IBWForm />}
-                              {activeId === 'ca' && <CalciumForm />}
-                              {activeId === 'op' && <OpioidForm />}
-                              {activeId === 'vanc' && <VancoForm />}
-                              {activeId === 'pheny' && <PhenytoinForm />}
-                              {activeId === 'curb' && <CURBForm />}
-                              {activeId === 'wells' && <WellsForm />}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      </div>
                     </div>
                   )
                 })}
               </div>
             </div>
-
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   )
