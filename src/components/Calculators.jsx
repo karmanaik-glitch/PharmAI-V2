@@ -49,47 +49,57 @@ export function Calculators({ isOpen, onClose }) {
               </button>
             </div>
 
-            <div className="flex flex-1 overflow-hidden">
-              {/* SIDEBAR LIST */}
-              <div className="w-[280px] border-r border-b1 bg-card2/30 p-3 overflow-y-auto flex flex-col gap-2">
-                {CALCULATORS.map(c => (
-                  <button 
-                    key={c.id}
-                    onClick={() => setActiveId(c.id)}
-                    className={`flex flex-col items-start text-left p-3 rounded-xl transition-all border ${activeId === c.id ? 'bg-blue/10 border-blue/30 shadow-[0_4px_12px_rgba(56,189,248,0.1)]' : 'bg-transparent border-transparent hover:bg-white/5'}`}
-                  >
-                    <div className={`font-bold text-[14px] ${activeId === c.id ? 'text-blue' : 'text-primary'}`}>{c.name}</div>
-                    <div className="text-[12px] text-muted mt-0.5">{c.desc}</div>
-                  </button>
-                ))}
-              </div>
-
-              {/* ACTIVE CALC AREA */}
-              <div className="flex-1 p-6 overflow-y-auto bg-card">
-                <AnimatePresence mode="wait">
-                  <motion.div 
-                    key={activeId}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.15 }}
-                    className="max-w-xl mx-auto w-full"
-                  >
-                    {activeId === 'ckd' && <CKDEPIForm />}
-                    {activeId === 'crcl' && <CrClForm />}
-                    {activeId === 'meld' && <MELDForm />}
-                    {activeId === 'cp' && <ChildPughForm />}
-                    {activeId === 'ped' && <PediatricForm />}
-                    {activeId === 'bsa' && <BSAForm />}
-                    {activeId === 'ibw' && <IBWForm />}
-                    {activeId === 'ca' && <CalciumForm />}
-                    {activeId === 'op' && <OpioidForm />}
-                    {activeId === 'vanc' && <VancoForm />}
-                    {activeId === 'pheny' && <PhenytoinForm />}
-                    {activeId === 'curb' && <CURBForm />}
-                    {activeId === 'wells' && <WellsForm />}
-                  </motion.div>
-                </AnimatePresence>
+            <div className="flex-1 overflow-y-auto p-4 bg-background">
+              <div className="max-w-xl mx-auto flex flex-col gap-3">
+                {CALCULATORS.map(c => {
+                  const isActive = activeId === c.id
+                  return (
+                    <div key={c.id} className="bg-card border border-b1 rounded-2xl overflow-hidden transition-all shadow-sm">
+                      <button 
+                        onClick={() => setActiveId(isActive ? null : c.id)}
+                        className={`w-full flex items-center justify-between p-4 transition-colors ${isActive ? 'bg-blue/5' : 'hover:bg-card2'}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 ${isActive ? 'bg-blue text-white shadow-md' : 'bg-card2 text-t2 border border-b2'}`}>
+                            <span className="ms">{c.icon}</span>
+                          </div>
+                          <div className="text-left">
+                            <div className={`font-bold text-[15px] ${isActive ? 'text-blue' : 'text-primary'}`}>{c.name}</div>
+                            <div className="text-[12px] text-muted">{c.desc}</div>
+                          </div>
+                        </div>
+                        <span className={`ms text-t2 transition-transform duration-300 ${isActive ? 'rotate-180' : ''}`}>expand_more</span>
+                      </button>
+                      
+                      <AnimatePresence initial={false}>
+                        {isActive && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden border-t border-b1/50"
+                          >
+                            <div className="p-5 bg-card2/30">
+                              {activeId === 'ckd' && <CKDEPIForm />}
+                              {activeId === 'crcl' && <CrClForm />}
+                              {activeId === 'meld' && <MELDForm />}
+                              {activeId === 'cp' && <ChildPughForm />}
+                              {activeId === 'ped' && <PediatricForm />}
+                              {activeId === 'bsa' && <BSAForm />}
+                              {activeId === 'ibw' && <IBWForm />}
+                              {activeId === 'ca' && <CalciumForm />}
+                              {activeId === 'op' && <OpioidForm />}
+                              {activeId === 'vanc' && <VancoForm />}
+                              {activeId === 'pheny' && <PhenytoinForm />}
+                              {activeId === 'curb' && <CURBForm />}
+                              {activeId === 'wells' && <WellsForm />}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )
+                })}
               </div>
             </div>
 

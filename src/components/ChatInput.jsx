@@ -113,13 +113,23 @@ export function ChatInput({ onSend, isLoading }) {
 
       <div className="bg-card/90 backdrop-blur-2xl border border-b1 rounded-[28px] p-1.5 px-3 shadow-[0_8px_32px_rgba(0,0,0,0.4)] flex items-center gap-2 transition-all focus-within:border-blue/50 focus-within:shadow-[0_8px_40px_rgba(56,189,248,0.12)]">
 
-        {/* Attach Button */}
+        {/* Camera/Image Button */}
         <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
         <button 
           onClick={() => fileInputRef.current?.click()}
           className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all ${imageStr ? 'bg-primary text-background' : 'bg-transparent text-t2 hover:bg-b1/30 hover:text-primary'}`}
+          title="Attach Image"
         >
-          <span className="ms sm">attach_file</span>
+          <span className="ms sm">photo_camera</span>
+        </button>
+
+        {/* Mic Button (Visual only for now, can implement Web Speech API later) */}
+        <button 
+          onClick={() => { Sounds.play('tick'); alert('Voice input coming soon!'); }}
+          className="w-10 h-10 rounded-xl bg-transparent text-t2 flex items-center justify-center shrink-0 transition-all hover:bg-b1/30 hover:text-primary"
+          title="Voice Input"
+        >
+          <span className="ms sm">mic</span>
         </button>
 
         {/* Text Input */}
